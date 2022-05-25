@@ -11,11 +11,12 @@ public class CreatePersonCommandValidator : AbstractValidator<CreatePersonComman
             .NotEmpty().WithMessage("Name is required.");
 
         RuleFor(x => x.BirthDate)
-            .NotEmpty().WithMessage("Birth date is required.");
+            .NotEmpty().WithMessage("Birth date is required.")
+            .LessThanOrEqualTo(x => DateTime.Now).WithMessage("Birth date have to be less or equal today.");
 
         RuleFor(x => x.Gender)
-            .MaximumLength(1).WithMessage("Gender must not exceed 1 characters.")
-            .NotEmpty().WithMessage("Gender is required.");
+            .NotNull().WithMessage("Gender must have a valid value.")
+            .IsInEnum().WithMessage("Gender must have a valid value.");
 
         RuleFor(x => x.Email)
             .MaximumLength(100).WithMessage("Email must not exceed 100 characters.")
@@ -27,7 +28,8 @@ public class CreatePersonCommandValidator : AbstractValidator<CreatePersonComman
             .NotEmpty().WithMessage("Cpf is required.");
 
         RuleFor(x => x.StartDate)
-            .NotEmpty().WithMessage("Start date is required.");
+            .NotEmpty().WithMessage("Start date is required.")
+            .LessThanOrEqualTo(x => DateTime.Now).WithMessage("Start date have to be less or equal today.");
 
         RuleFor(x => x.Team)
             .IsInEnum().WithMessage("Team must have a valid value.");

@@ -11,7 +11,7 @@ public class CreatePersonCommand : IRequest<int>
 
     public DateTime BirthDate { get; set; }
 
-    public string? Gender { get; set; }
+    public Gender? Gender { get; set; }
 
     public string? Email { get; set; }
 

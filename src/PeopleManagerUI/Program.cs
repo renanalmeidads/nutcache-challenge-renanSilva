@@ -1,5 +1,7 @@
+using FluentValidation.AspNetCore;
 using PeopleManager.Application;
 using PeopleManager.Infrastructure;
+using PeopleManager.PeopleManagerUI.Filters;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -14,7 +16,9 @@ builder.Services.AddCors(o => o.AddPolicy(MyAllowSpecificOrigins,
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+    options.Filters.Add<ApiExceptionFilterAttribute>())
+        .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
 var app = builder.Build();
 

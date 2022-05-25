@@ -1,6 +1,6 @@
 <p *ngIf="!people"><em>Loading...</em></p>
 
-<button class="btn btn-primary float-left" title="Add person..." (click)="showNewListModal(newPersonModalTemplate)">
+<button class="btn btn-primary float-left" title="Add person..." (click)="showNewPersonModal(newPersonModalTemplate)">
   ADD PERSON <fa-icon [icon]="faPlus"></fa-icon>
 </button>
 
@@ -14,11 +14,20 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let p of people">
+    <tr [attr.id]="p.id" *ngFor="let p of people">
       <td>{{ p.name }}</td>
       <td>{{ p.email }}</td>
-      <td>{{ p.startDate }}</td>
-      <td>{{ p.team }}</td>
+      <td>{{ p.startDate | date:'MM/yyyy' }}</td>
+      <td>{{ team[p.team] }}</td>   
+      <td>
+        <div ngbDropdown class="btn-group dropleft">
+          <button id="personOptions" class="btn btn-default float-right dropdown-arrow" ngbDropdownToggle><fa-icon [icon]="faEllipsisH"></fa-icon></button>
+          <div ngbDropdownMenu class="dropdown-menu">
+            <button ngbDropdownItem (click)="showEditPersonModal(editPersonModalTemplate, p)">Edit</button>
+            <button ngbDropdownItem (click)="showDeletePersonModal(deletePersonModalTemplate, p)">Delete</button>
+          </div>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -30,13 +39,14 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" placeholder="Person name..." [(ngModel)]="newPersonEditor.name" (keyup.enter)="addPerson()" />
+      <input type="text" class="form-control" maxlength="200" id="name" placeholder="Person name..."
+             [(ngModel)]="newPersonEditor.name" (keyup.enter)="addPerson()" />
 
       <label for="birthDate">Birth Date</label>
 
       <div class="input-group">
         <input class="form-control" placeholder="yyyy-mm-dd"
-               name="birthDate" [(ngModel)]="newPersonEditor.birthDate" ngbDatepicker #d="ngbDatepicker">
+               name="birthDate" [(ngModel)]="newPersonEditor.birthDate" ngbDatepicker #d="ngbDatepicker" (keyup.enter)="addPerson()">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
         </div>
@@ -45,24 +55,93 @@
       <div class="form-group">
         <label for="priority">Gender</label>
         <select class="form-control" [(ngModel)]="newPersonEditor.gender">
-          <option [ngValue]="gender" *ngFor="let gender of genderList">{{ gender }}</option>
+          <option [ngValue]="gender.id" *ngFor="let gender of genderList">{{ gender.value }}</option>
         </select>
       </div>
 
       <label for="email">Email</label>
-      <input type="text" class="form-control" id="email" placeholder="Email..." [(ngModel)]="newPersonEditor.email" (keyup.enter)="addPerson()" />
+      <input type="text" class="form-control" maxlength="100" id="email" placeholder="Email..." [(ngModel)]="newPersonEditor.email" (keyup.enter)="addPerson()" />
 
       <label for="cpf">Cpf</label>
-      <input type="text" class="form-control" id="cpf" placeholder="Cpf..." [(ngModel)]="newPersonEditor.cpf" (keyup.enter)="addPerson()" />
+      <input type="text" class="form-control" maxlength="14" id="cpf" placeholder="Cpf..." mask="000.000.000-99" [(ngModel)]="newPersonEditor.cpf" (keyup.enter)="addPerson()" />
 
       <label for="startDate">startDate</label>
+      <input type="text" class="form-control" maxlength="7" id="startDate" placeholder="mm/yyyy" mask="99/9999" [(ngModel)]="newPersonEditor.startDate" (keyup.enter)="addPerson()" />
 
-      <label for="team">Team</label>
+      <div class="form-group">
+        <label for="priority">Team</label>
+        <select class="form-control" [(ngModel)]="newPersonEditor.team">
+          <option [ngValue]="team.id" *ngFor="let team of teamList">{{ team.value }}</option>
+        </select>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
     <div class="text-right">
       <button class="btn btn-primary" (click)="addPerson()">Create</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editPersonModalTemplate>
+  <div class="modal-header clearfix">
+    <h4 class="modal-title float-left">Edit Person</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" maxlength="200" id="name" placeholder="Person name..."
+             [(ngModel)]="editPersonEditor.name" />
+
+      <label for="birthDate">Birth Date</label>
+
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd"
+               name="birthDate" [(ngModel)]="editPersonEditor.birthDate" ngbDatepicker #d="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="priority">Gender</label>
+        <select class="form-control" [(ngModel)]="editPersonEditor.gender">
+          <option [ngValue]="gender.id" *ngFor="let gender of genderList">{{ gender.value }}</option>
+        </select>
+      </div>
+
+      <label for="email">Email</label>
+      <input type="text" class="form-control" maxlength="100" id="email" placeholder="Email..." [(ngModel)]="editPersonEditor.email" />
+
+      <label for="cpf">Cpf</label>
+      <input type="text" class="form-control" maxlength="14" id="cpf" placeholder="Cpf..." mask="000.000.000-99" [(ngModel)]="editPersonEditor.cpf" />
+
+      <label for="startDate">startDate</label>
+      <input type="text" class="form-control" maxlength="7" id="startDate" placeholder="mm/yyyy" mask="99/9999" [(ngModel)]="editPersonEditor.startDate" />
+
+      <div class="form-group">
+        <label for="priority">Team</label>
+        <select class="form-control" [(ngModel)]="editPersonEditor.team">
+          <option [ngValue]="team.id" *ngFor="let team of teamList">{{ team.value }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn btn-primary" (click)="editPerson()">Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #deletePersonModalTemplate>
+  <div class="modal-header clearfix">
+    <h4 class="modal-title float-left">Delete "{{ deleteSelectedPerson?.name }}" ?</h4>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button type="button" class="btn btn-default" (click)="deletePersonModalRef.hide()">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="deletePersonConfirmed()">Delete</button>
     </div>
   </div>
 </ng-template>

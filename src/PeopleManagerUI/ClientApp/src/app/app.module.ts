@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -32,7 +33,8 @@ import { PeopleComponent } from './people/people.component';
     AppRoutingModule,
     FontAwesomeModule,
     ModalModule.forRoot(),
-    NgbModule
+    NgbModule,
+    NgxMaskModule.forRoot()
   ],
   providers: [{ provide: "API_BASE_URL", useValue: environment.apiRoot }],
   bootstrap: [AppComponent]
