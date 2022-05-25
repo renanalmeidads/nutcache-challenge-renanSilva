@@ -1,1 +1,77 @@
-<p>people works!</p>
+<p *ngIf="!people"><em>Loading...</em></p>
+
+<button class="btn btn-primary float-left" title="Add person..." (click)="showNewListModal(newPersonModalTemplate)">
+  ADD PERSON <fa-icon [icon]="faPlus"></fa-icon>
+</button>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="people">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Start Date</th>
+      <th>Team</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of people">
+      <td>{{ p.name }}</td>
+      <td>{{ p.email }}</td>
+      <td>{{ p.startDate }}</td>
+      <td>{{ p.team }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #newPersonModalTemplate>
+  <div class="modal-header clearfix">
+    <h4 class="modal-title float-left">New Person</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" placeholder="Person name..." [(ngModel)]="newPersonEditor.name" (keyup.enter)="addPerson()" />
+
+      <label for="birthDate">Birth Date</label>
+
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd"
+               name="birthDate" [(ngModel)]="newPersonEditor.birthDate" ngbDatepicker #d="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+        </div>
+      </div>
+
+      <div ngbDropdown class="dropdown">
+        <button ngbDropdownToggle class="btn btn-outline-primary" id="gender">
+          {{ selectedGender }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="gender">
+          <div *ngFor="let gender of genderList">
+            <button class="dropdown-item"
+                    on-click="changeGender(gender)">
+              {{ gender }}
+            </button>
+          </div>
+          <!--<button class="dropdown-item" *ngFor="let gender of genderList" (click)="changeGender(gender)">{{gender}}</button>-->
+        </div>
+      </div>
+
+
+      <label for="email">Email</label>
+      <input type="text" class="form-control" id="email" placeholder="Email..." [(ngModel)]="newPersonEditor.email" (keyup.enter)="addPerson()" />
+
+      <label for="cpf">Cpf</label>
+      <input type="text" class="form-control" id="cpf" placeholder="Cpf..." [(ngModel)]="newPersonEditor.cpf" (keyup.enter)="addPerson()" />
+
+      <label for="startDate">startDate</label>
+
+      <label for="team">Team</label>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="text-right">
+      <button class="btn btn-primary" (click)="addPerson()">Create</button>
+    </div>
+  </div>
+</ng-template>

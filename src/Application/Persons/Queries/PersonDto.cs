@@ -1,5 +1,6 @@
 ﻿using PeopleManager.Application.Common.Mappings;
 using PeopleManager.Domain.Entities;
+using PeopleManager.Domain.Enums;
 
 namespace PeopleManager.Application.Persons.Queries;
 
@@ -19,6 +20,5 @@ public class PersonDto : IMapFrom<Person>
 
     public DateTime StartDate { get; set; }
 
-    //ToDo Add ENUM
-    public int Team { get; set; }
+    public Team Team { get; set; }
 }

@@ -19,7 +19,8 @@ public class CreatePersonCommandValidator : AbstractValidator<CreatePersonComman
 
         RuleFor(x => x.Email)
             .MaximumLength(100).WithMessage("Email must not exceed 100 characters.")
-            .NotEmpty().WithMessage("Email is required.");
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Invalid email.");
 
         RuleFor(x => x.Cpf)
             .MaximumLength(11).WithMessage("Cpf must not exceed 11 characters.")
