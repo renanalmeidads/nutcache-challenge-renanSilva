@@ -20,9 +20,6 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<ApiExceptionFilterAttribute>())
         .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
-//builder.Services.AddHealthChecks()
-    //.AddDbContextCheck<ApplicationDbContext>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
